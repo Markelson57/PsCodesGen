@@ -70,7 +70,7 @@ archivo="$directorio_destino/codigos.txt"
 
 for ((i=1; i<=num_iteraciones; i++))
 do
-  contenido=$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 12 | head -n 1)
+  contenido=$(cat /dev/urandom | tr -dc 'A-Z0-9' | fold -w 12 | head -n 1)
   
   if random_valido; then
     echo "Válido: $contenido"
