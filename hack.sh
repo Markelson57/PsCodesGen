@@ -8,6 +8,22 @@ verificar_ruta() {
   fi
 }
 
+# Función para determinar si un código es válido o no
+random_valido() {
+  local probabilidad_valido=2  # Probabilidad del 2% de que sea válido
+
+  local num_random=$(( RANDOM % 100 ))
+
+  if (( num_random < probabilidad_valido )); then
+    return 0  # Código válido
+  else
+    return 1  # Código no válido
+  fi
+}
+
+# Limpiar la pantalla
+clear
+
 # Menú interactivo
 echo "Menú de Configuración"
 echo "---------------------"
@@ -32,23 +48,22 @@ done
 echo "Ingrese el número de códigos que desea generar:"
 read -r num_iteraciones
 
-archivo="codigos.txt"
+archivo="$directorio_destino/codigos.txt"
 
 for ((i=1; i<=num_iteraciones; i++))
 do
-  contenido=$(cat /dev/urandom | tr -dc 'A-Z0-9' | fold -w 12 | head -n 1)
+  contenido=$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 12 | head -n 1)
   
-  if [ $i -eq 34 ]; then
+  if random_valido; then
     echo "Válido: $contenido"
   else
     echo "Error: $contenido"
   fi
 
-  echo "$contenido" > "$directorio_origen/$archivo"
-  cp "$directorio_origen/$archivo" "$directorio_destino/$archivo_$i" >/dev/null 2>&1
+  echo "$contenido" >> "$archivo"
   
   tiempo_espera=$(shuf -i 1-10 -n 1)
   sleep "$tiempo_espera"
 done
 
-echo "Los códigos han sido generados y guardados en el directorio de destino correctamente."
+echo "Los códigos han sido generados y guardados en el archivo $archivo correctamente."
