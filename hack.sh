@@ -8,14 +8,17 @@ verificar_ruta() {
   fi
 }
 
-# Función para generar un código aleatorio de PS4
-generar_codigo_ps4() {
-  local codigo
-  local min=1000
-  local max=9999
+# Función para determinar si un código es válido o no
+random_valido() {
+  local probabilidad_valido=2  # Probabilidad del 2% de que sea válido
 
-  codigo=$(shuf -i "$min"-"$max" -n 1)
-  echo "$codigo"
+  local num_random=$(( RANDOM % 100 ))
+
+  if (( num_random < probabilidad_valido )); then
+    return 0  # Código válido
+  else
+    return 1  # Código no válido
+  fi
 }
 
 # Limpiar la pantalla
@@ -74,11 +77,10 @@ fi
 
 archivo="$directorio_destino/codigos.txt"
 
-# Generar y guardar los códigos
 for ((i=1; i<=num_iteraciones; i++))
 do
-  contenido=$(generar_codigo_ps4)
-
+  contenido=$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 12 | head -n 1)
+  
   if random_valido; then
     echo "Válido: $contenido"
   else
